@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+  <constant name="struts.devMode" value="true" /> <!-- 开启调试模式，直接在页面上显示错误栈信息 -->
+  <constant name="struts.configuration.xml.reload" value="true" /> <!-- struts配置改变后自动加载 -->
+
+  <package name="main" namespace="/" extends="struts-default">
+
+    <interceptors>
+      <!-- 自定义拦截器 -->
+      <interceptor name="authorization"
+        class="cn.edu.zju.plex.wp.util.AuthorizationInterceptor" />
+
+      <interceptor-stack name="myStack">
+        <!-- 添加自定义拦截器 -->
+        <interceptor-ref name="authorization">
+          <param name="ignoreActions">loginAction, registerAction</param>
+        </interceptor-ref>
+        <!-- 添加struts默认的拦截器 -->
+        <interceptor-ref name="defaultStack" />
+      </interceptor-stack>
+
+    </interceptors>
+    <!-- 更改struts默认使用的拦截器 -->
+    <default-interceptor-ref name="myStack" />
+
+    <global-results>
+      <result name="login">/WEB-INF/login.jsp</result>
+      <result name="success" type="redirectAction">
+        <param name="actionName">listFilesAction</param>
+      </result>
+    </global-results>
+
+    <action name="loginAction" class="cn.edu.zju.plex.wp.action.LoginAction">
+      <result name="success">/index.jsp</result>
+    </action>
+    
+    <action name="logoutAction" class="cn.edu.zju.plex.wp.action.LogoutAction">
+      <result name="success">/index.jsp</result>
+    </action>
+
+    <action name="registerAction" class="cn.edu.zju.plex.wp.action.RegisterAction">
+      <result name="success">/index.jsp</result>
+      <result name="register">/WEB-INF/register.jsp</result>
+    </action>
+
+
+    <action name="listFilesAction" class="cn.edu.zju.plex.wp.action.ListFilesAction">
+      <result name="success">/WEB-INF/ftp.jsp</result>
+      <result name="input">/index.jsp</result>
+    </action>
+
+
+    <action name="downloadAction" class="cn.edu.zju.plex.wp.action.DownloadFileAction">
+      <result name="success" type="stream">
+        <!-- 事先并不知道未来的文件类型，可以设置成 ISO8859-1，保证可还原 -->
+        <param name="contentType">
+          application/octet-stream;charset=ISO8859-1
+        </param>
+        <!-- 运行的时候将action对象的属性的取值动态的填充在${}中间的部分，它等价于 action.getName()，这是在封装httpResponse的头，放到了getDownloadFile函数中了 -->
+        <!-- <param name="contentDisposition">attachment;filename="${fileName}"</param> -->
+        <!-- action中要含有getDownloadFile方法，且返回一个stream -->
+        <param name="inputName">downloadFile</param>
+        <!-- 设置缓存 -->
+        <param name="bufferSize">4096</param>
+      </result>
+    </action>
+
+
+    <!-- The redirect-action url generated will be : /listFilesAction.action?p=samplePara 
+      <result name="success" type="redirect-action"> <param name="actionName">listFilesAction</param> 
+      <param name="namespace">/</param> <param name="p">samplePara</param> </result> -->
+    <action name="uploadAction" class="cn.edu.zju.plex.wp.action.UploadFileAction">
+      <result name="input" type="redirectAction">
+        <param name="actionName">listFilesAction</param>
+      </result>
+      <result name="success">/WEB-INFupload-success.jsp</result>
+      <!--使用struts自带的文件上传拦截器 -->
+      <interceptor-ref name="fileUpload">
+        <!--设置成自己的配置，想文件类型和大小等限制 -->
+        <param name="maximumSize">20971520</param><!-- 单位是字节 20M （20971520B） -->
+        <param name="allowedTypes">image/bmp,image/x-png,image/png,image/gif,image/jpeg,image/jpg,image/pjpeg</param>
+      </interceptor-ref>
+      <interceptor-ref name="defaultStack"></interceptor-ref>
+    </action>
+
+  </package>
+
+  <package name="test" namespace="/test" extends="struts-default">
+
+    <global-results>
+      <result name="success">/index.jsp</result>
+    </global-results>
+
+    <action name="" class="cn.edu.zju.plex.wp.action.ForTestAction">
+      <result name="executeA">/index.jsp</result>
+      <result name="executeB">/index.jsp</result>
+      <interceptor-ref name="timer" /> <!-- 这里自定义了拦截器就不会用默认的拦截器了 -->
+    </action>
+
+  </package>
+
+</struts>

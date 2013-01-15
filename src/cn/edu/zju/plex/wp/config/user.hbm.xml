@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="cn.edu.zju.plex.wp.bean.UserBean" table="user">
+    <id name="id" column="id" type="long">
+      <generator class="native" />
+    </id>
+    <property name="username" type="string" not-null="true"
+      length="50">
+      <column name="username" />
+    </property>
+
+    <property name="realname" column="realname" type="string"
+      length="100" />
+    <property name="email" column="email" type="string"
+      not-null="true" length="100" />
+    <property name="password" column="password" type="string"
+      not-null="true" length="100" />
+
+    <property name="isActive" column="is_active" type="boolean" />
+
+    <property name="lastLogin">
+      <column name="last_login" sql-type="datetime" />
+    </property>
+    <property name="timeJoined">
+      <column name="time_joined" sql-type="datetime" />
+    </property>
+
+  </class>
+</hibernate-mapping>

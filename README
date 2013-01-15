@@ -1,0 +1,24 @@
+## About This Project
+
+## struts2
+Dependency:  
+* commons-fileupload-1.2.2.jar  
+* commons-io-2.0.1.jar  
+* commons-logging-1.1.1.jar  
+* freemarker-2.3.19.jar  
+* ognl-3.0.6.jar  
+* struts2-core-2.3.8.jar  
+* xwork-core-2.3.8.jar  
+
+## hibernate
+* Dependency:
+* antlr-2.7.6.jar  
+* cglib-2.2.jar   
+* commons-collections-3.1.jar  
+* dom4j-1.6.1.jar  
+* hibernate3.jar  
+* hibernate-jpa-2.0-api-1.0.1.Final.jar  
+* javassist-3.12.0.GA.jar  
+* jta-1.1.jar  
+* slf4j-api-1.6.1.jar  
+* slf4j-simple-1.6.1.jar  
